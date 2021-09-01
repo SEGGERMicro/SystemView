@@ -1,0 +1,2 @@
+# Make sure patch files retain all line endings.
+*.patch binary
