@@ -42,14 +42,14 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.30                                    *
+*       SystemView version: 3.32                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 
 File    : SEGGER_SYSVIEW_Config_embOS_Win32.c
 Purpose : Sample setup configuration of SystemView with embOS.
-Revision: $Rev: 15024 $
+Revision: $Rev: 25331 $
 */
 #include "RTOS.h"
 #include "SEGGER_SYSVIEW.h"
@@ -487,8 +487,8 @@ static int _SYS_SOCKET_IsReadable(_SYS_SOCKET_HANDLE hSocket, int TimeoutMs) {
   // 2) On the other side, there is NO server listening on the destination port
   //
   // Reg 1)
-  //   In such cases, the socket is reported non-writeable for a few [us] up to a few [s] depending on if this is a localhost, LAN or internet connection
-  //   After that period, the socket is reported as writeable
+  //   In such cases, the socket is reported non-writable for a few [us] up to a few [s] depending on if this is a localhost, LAN or internet connection
+  //   After that period, the socket is reported as writable
   //
   // Reg 2)
   //   In such cases, the following happens (S = Server):
@@ -622,8 +622,8 @@ static int _SYS_SOCKET_Receive(_SYS_SOCKET_HANDLE hSocket, void* pData, U32 MaxN
 *    hSocket  Handle to socket that has been returned by _SYS_SOCKET_OpenTCP() / _SYS_SOCKET_OpenUDP()
 *
 *  Return value
-*    == 1  O.K., socket writeable
-*    == 0  O.K., socket not writeable yet
+*    == 1  O.K., socket writable
+*    == 0  O.K., socket not writable yet
 */
 static int _SYS_SOCKET_IsWriteable(_SYS_SOCKET_HANDLE hSocket, int TimeoutMs) {
   SOCKET Sock;
@@ -772,7 +772,7 @@ _SYS_THREAD_PROC_EX_TYPE _SysViewCommThread(void* pPara) {
         if (r == 1 && v == 1) {   // TCP/IP connection still established? => Stop systemview session
           r = SEGGER_RTT_ReadUpBufferNoLock(ChannelID, acBuf, sizeof(acBuf));
           if (r > 0) {            // Read RTT data? => Send it via TCP/IP
-            NumBytes = _SYS_SOCKET_Send(hSockSV, acBuf, r);  // We do not care if the send succeded or not as we are closing anyway.
+            NumBytes = _SYS_SOCKET_Send(hSockSV, acBuf, r);  // We do not care if the send succeeded or not as we are closing anyway.
             _SYS_Sleep(10);        // Give system view some time to receive <Stop> info before closing socket.
           }
         }
@@ -894,7 +894,7 @@ void SEGGER_SYSVIEW_Conf(void) {
   LARGE_INTEGER TSFreq;
 
   //
-  // Get the performace counter frequency and scale it down to be < 1 GHz.
+  // Get the performance counter frequency and scale it down to be < 1 GHz.
   // (We can only handle cycles >= 1ns)
   //
   QueryPerformanceFrequency(&TSFreq);
@@ -909,7 +909,7 @@ void SEGGER_SYSVIEW_Conf(void) {
   }
   SEGGER_SYSVIEW_Init(TSFreq.LowPart, TSFreq.LowPart,
                       &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
-  OS_TRACE_SetAPI(&embOS_TraceAPI_SYSVIEW);   // Configure embOS to use SYSVIEW.
+  OS_SetTraceAPI(&embOS_TraceAPI_SYSVIEW);    // Configure embOS to use SYSVIEW.
 #if SYSVIEW_START_ON_INIT
   SEGGER_SYSVIEW_Start();                     // Start recording to catch system initialization.
 #endif

@@ -42,7 +42,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.30                                    *
+*       SystemView version: 3.32                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
@@ -50,7 +50,7 @@
 File    : SEGGER_SYSVIEW_Conf.h
 Purpose : SEGGER SystemView configuration file.
           Set defines which deviate from the defaults (see SEGGER_SYSVIEW_ConfDefaults.h) here.          
-Revision: $Rev: 17066 $
+Revision: $Rev: 25331 $
 
 Additional information:
   Required defines which must be set are:

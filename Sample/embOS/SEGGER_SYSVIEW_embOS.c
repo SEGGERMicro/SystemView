@@ -42,14 +42,14 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.30                                    *
+*       SystemView version: 3.32                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 
 File    : SEGGER_SYSVIEW_embOS.c
 Purpose : Interface between embOS and System View.
-Revision: $Rev: 22295 $
+Revision: $Rev: 25329 $
 */
 
 #include "RTOS.h"
@@ -82,11 +82,11 @@ static void _cbSendTaskInfo(const OS_TASK* pTask) {
   memset(&Info, 0, sizeof(Info));  // Fill all elements with 0 to allow extending the structure in future version without breaking the code
   Info.TaskID = (U32)pTask;
 #if OS_TRACKNAME
-  Info.sName = pTask->Name;
+  Info.sName = OS_GetTaskName(pTask);
 #endif
   Info.Prio = pTask->Priority;
 #if OS_CHECKSTACK
-  Info.StackBase = (U32)pTask->pStackBot;
+  Info.StackBase = (U32)OS_GetStackBase(pTask);
   Info.StackSize = pTask->StackSize;
 #endif
   SEGGER_SYSVIEW_SendTaskInfo(&Info);
@@ -112,7 +112,11 @@ static void _cbSendTaskList(void) {
 #if ((OS_VERSION >= 43800) && (OS_TRACKNAME != 0))  // Human readable object identifiers supported since embOS V4.38
   {
     OS_OBJNAME* p;
+#if (OS_VERSION >= 51600)
+    for (p = OS_Global.pObjNameRoot; p != NULL; p = p->pNext) {
+#else
     for (p = OS_pObjNameRoot; p != NULL; p = p->pNext) {
+#endif
       SEGGER_SYSVIEW_NameResource((OS_U32)p->pOSObjID, p->sName);
     }
   }

@@ -42,7 +42,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.30                                    *
+*       SystemView version: 3.32                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
@@ -51,21 +51,21 @@ File    : SEGGER_SYSVIEW_Config_embOS_CM0.c
 Purpose : Sample setup configuration of SystemView with embOS
           on Cortex-M0/Cortex-M0+/Cortex-M1 systems which do not
           have a cycle counter.
-Revision: $Rev: 21298 $
+Revision: $Rev: 25330 $
 
 Additional information:
   SEGGER_SYSVIEW_TickCnt must be incremented in the SysTick
   handler before any SYSVIEW event is generated.
- 
+
   Example in embOS RTOSInit.c:
- 
+
   void SysTick_Handler(void) {
   #if (OS_PROFILE != 0)
-    SEGGER_SYSVIEW_TickCnt++;  // Increment SEGGER_SYSVIEW_TickCnt before calling OS_INT_EnterNestable().
+    SEGGER_SYSVIEW_TickCnt++;  // Increment SEGGER_SYSVIEW_TickCnt before calling OS_EnterNestableInterrupt().
   #endif
-    OS_INT_EnterNestable();
+    OS_EnterNestableInterrupt();
     OS_TICK_Handle();
-    OS_INT_LeaveNestable();
+    OS_LeaveNestableInterrupt();
   }
 */
 #include "RTOS.h"
@@ -129,7 +129,7 @@ static void _cbSendSystemDesc(void) {
 void SEGGER_SYSVIEW_Conf(void) {
   SEGGER_SYSVIEW_Init(SEGGER_SYSVIEW_TIMESTAMP_FREQ, SEGGER_SYSVIEW_CPU_FREQ,
                       &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
-  OS_TRACE_SetAPI(&embOS_TraceAPI_SYSVIEW);  // Configure embOS to use SYSVIEW.
+  OS_SetTraceAPI(&embOS_TraceAPI_SYSVIEW);   // Configure embOS to use SYSVIEW.
 #if SEGGER_SYSVIEW_START_ON_INIT
   SEGGER_SYSVIEW_Start();                    // Start recording to catch system initialization.
 #endif
