@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2021 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2024 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -42,55 +42,42 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.30                                    *
+*       SystemView version: 3.60e                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 
-File    : SEGGER_SYSVIEW_Config_embOS_RZA1.c
-Purpose : Sample setup configuration of SystemView with embOS
-          on Renesas RZA1 devices.
-Revision: $Rev: 12316 $
-
-Additional information:
-  SEGGER_SYSVIEW_TickCnt must be incremented in the SysTick
-  handler before any SYSVIEW event is generated.
- 
-  Example in embOS RTOSInit.c:
- 
-  void SysTick_Handler(void) {
-  #if (OS_PROFILE != 0)
-    SEGGER_SYSVIEW_TickCnt++;  // Increment SEGGER_SYSVIEW_TickCnt before calling OS_INT_EnterNestable().
-  #endif
-    OS_INT_EnterNestable();
-    OS_TICK_Handle();
-    OS_INT_LeaveNestable();
-  }
-  
-  SEGGER_SYSVIEW_InterruptId has to be set in the IRQ handler
-  to identify the active interrupt.
+File    : SEGGER_SYSVIEW_Config_FreeRTOS.c
+Purpose : Sample setup configuration of SystemView with FreeRTOS.
+Revision: $Rev: 7745 $
 */
-#include "RTOS.h"
+#include "FreeRTOS.h"
 #include "SEGGER_SYSVIEW.h"
-#include "SEGGER_SYSVIEW_embOS.h"
+
+extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 
 /*********************************************************************
 *
-*       Defines, fixed
+*       Defines, configurable
 *
 **********************************************************************
 */
-#define   OSTM_CNT                   (*(volatile unsigned int*) 0xFCFEC004u)
-#define   OSTM_INT_ID                (134)
-#define   TIMER_INTERRUPT_PENDING()  (OS_GIC_IsPending(OSTM_INT_ID))
+// The application name to be displayed in SystemViewer
+#define SYSVIEW_APP_NAME        "FreeRTOS Demo Application"
 
-/*********************************************************************
-*
-*       Local functions
-*
-**********************************************************************
-*/
-/*********************************************************************
+// The target device name
+#define SYSVIEW_DEVICE_NAME     "Cortex-M4"
+
+// Frequency of the timestamp. Must match SEGGER_SYSVIEW_GET_TIMESTAMP in SEGGER_SYSVIEW_Conf.h
+#define SYSVIEW_TIMESTAMP_FREQ  (configCPU_CLOCK_HZ)
+
+// System Frequency. SystemcoreClock is used in most CMSIS compatible projects.
+#define SYSVIEW_CPU_FREQ        configCPU_CLOCK_HZ
+
+// The lowest RAM address used for IDs (pointers)
+#define SYSVIEW_RAM_BASE        (0x10000000)
+
+/********************************************************************* 
 *
 *       _cbSendSystemDesc()
 *
@@ -98,16 +85,8 @@ Additional information:
 *    Sends SystemView description strings.
 */
 static void _cbSendSystemDesc(void) {
-  SEGGER_SYSVIEW_SendSysDesc("N=" SEGGER_SYSVIEW_APP_NAME ",O=embOS,D=" SEGGER_SYSVIEW_DEVICE_NAME );
-#ifdef SEGGER_SYSVIEW_SYSDESC0
-  SEGGER_SYSVIEW_SendSysDesc(SEGGER_SYSVIEW_SYSDESC0);
-#endif
-#ifdef SEGGER_SYSVIEW_SYSDESC1
-  SEGGER_SYSVIEW_SendSysDesc(SEGGER_SYSVIEW_SYSDESC1);
-#endif
-#ifdef SEGGER_SYSVIEW_SYSDESC2
-  SEGGER_SYSVIEW_SendSysDesc(SEGGER_SYSVIEW_SYSDESC2);
-#endif
+  SEGGER_SYSVIEW_SendSysDesc("N="SYSVIEW_APP_NAME",D="SYSVIEW_DEVICE_NAME",O=FreeRTOS");
+  SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
 }
 
 /*********************************************************************
@@ -116,73 +95,10 @@ static void _cbSendSystemDesc(void) {
 *
 **********************************************************************
 */
-/*********************************************************************
-*
-*       SEGGER_SYSVIEW_Conf()
-*
-* Function description
-*   Configure and initialize SystemView and register it with embOS.
-*
-* Additional information
-*   If enabled, SEGGER_SYSVIEW_Conf() will also immediately start
-*   recording events with SystemView.
-*/
 void SEGGER_SYSVIEW_Conf(void) {
-  SEGGER_SYSVIEW_Init(SEGGER_SYSVIEW_TIMESTAMP_FREQ, SEGGER_SYSVIEW_CPU_FREQ,
+  SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, 
                       &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
-  OS_TRACE_SetAPI(&embOS_TraceAPI_SYSVIEW);  // Configure embOS to use SYSVIEW.
-#if SEGGER_SYSVIEW_START_ON_INIT
-  SEGGER_SYSVIEW_Start();                    // Start recording to catch system initialization.
-#endif
-}
-
-/*********************************************************************
-*
-*       SEGGER_SYSVIEW_X_GetTimestamp()
-*
-* Function description
-*   Returns the current timestamp in cycles using the system tick
-*   count and the SysTick counter.
-*   All parameters of the SysTick have to be known and are set via
-*   configuration defines on top of the file.
-*
-* Return value
-*   The current timestamp.
-*
-* Additional information
-*   SEGGER_SYSVIEW_X_GetTimestamp is always called when interrupts are
-*   disabled. Therefore locking here is not required.
-*/
-U32 SEGGER_SYSVIEW_X_GetTimestamp(void) {
-  U32 TickCount;
-  U32 Cycles;
-  //
-  // Get the cycles of the current system tick.
-  // Sample timer is down-counting, subtract the current value from the number of cycles per tick.
-  //
-  Cycles = OS_TIMER_RELOAD - OSTM_CNT;
-  //
-  // Get the system tick count.
-  //
-  TickCount = SEGGER_SYSVIEW_TickCnt;
-  //
-  // If a SysTick interrupt is pending, re-read timer and adjust result
-  //
-  if (TIMER_INTERRUPT_PENDING() != 0) {
-  TickCount++;
-    Cycles = OS_TIMER_RELOAD - OSTM_CNT;
-  }
-  Cycles += TickCount * OS_TIMER_RELOAD;
-
-  return Cycles;
-}
-
-/*********************************************************************
-*
-*       SEGGER_SYSVIEW_X_GetInterruptId()
-*/
-U32 SEGGER_SYSVIEW_X_GetInterruptId(void) {
-  return SEGGER_SYSVIEW_InterruptId;
+  SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
 }
 
 /*************************** End of file ****************************/

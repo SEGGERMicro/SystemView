@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2021 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2024 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -42,7 +42,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.32                                    *
+*       SystemView version: 3.60e                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
@@ -73,6 +73,23 @@ Additional information:
 *
 **********************************************************************
 */
+
+/*********************************************************************
+*
+*       Define: SEGGER_SYSVIEW_SECTION
+*
+*  Description
+*    Section to place the SystemView RTT Buffer into.
+*  Default
+*    undefined: Do not place into a specific section.
+*  Notes
+*    If SEGGER_RTT_SECTION is defined, the default changes to use
+*    this section for the SystemView RTT Buffer, too.
+*/
+#if !(defined SEGGER_SYSVIEW_SECTION) && (defined SEGGER_RTT_BUFFER_SECTION)
+  #define SEGGER_SYSVIEW_SECTION                  SEGGER_RTT_BUFFER_SECTION
+#endif
+
 
 /*********************************************************************
 * TODO: Add your defines here.                                       *

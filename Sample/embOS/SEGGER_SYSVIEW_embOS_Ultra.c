@@ -47,7 +47,7 @@
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 
-File    : SEGGER_SYSVIEW_embOS.c
+File    : SEGGER_SYSVIEW_embOS_Ultra.c
 Purpose : Interface between embOS and System View.
 Revision: $Rev: 25329 $
 */
@@ -208,6 +208,17 @@ static void _cbOnTaskTerminate(unsigned int TaskId) {
 #define _cbOnTaskTerminate  SEGGER_SYSVIEW_OnTaskTerminate
 #endif
 
+/*********************************************************************
+*
+*       _cbGet_us_Timestamp()
+*
+*  Function description
+*    Required for compatibility with SEGGER_SYSVIEW_OS_API struct
+*/
+static OS_U64 _cbGet_us_Timestamp(void) {
+  return OS_TIME_ConvertCycles2us(OS_TIME_Get_Cycles());
+}
+
 //
 // embOS trace API that targets SYSVIEW
 //
@@ -253,7 +264,7 @@ const OS_TRACE_API embOS_TraceAPI_SYSVIEW = {
 // Services provided to SYSVIEW by embOS
 //
 const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI = {
-  OS_GetTime_us64,
+  _cbGet_us_Timestamp,
   _cbSendTaskList,
 };
 
