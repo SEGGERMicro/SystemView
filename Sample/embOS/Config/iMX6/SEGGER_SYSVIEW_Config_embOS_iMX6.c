@@ -41,10 +41,6 @@
 * DAMAGE.                                                            *
 *                                                                    *
 **********************************************************************
-*                                                                    *
-*       SystemView version: 3.60e                                    *
-*                                                                    *
-**********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 File    : SEGGER_SYSVIEW_Config_embOS_iMX6.c
 Purpose : Sample setup configuration of SystemView with embOS

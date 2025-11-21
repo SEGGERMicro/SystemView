@@ -41,10 +41,6 @@
 * DAMAGE.                                                            *
 *                                                                    *
 **********************************************************************
-*                                                                    *
-*       SystemView version: 3.60e                                    *
-*                                                                    *
-**********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 File    : SEGGER_SYSVIEW_ConfDefaults.h
 Purpose : Defines defaults for configurable defines used in
@@ -88,17 +84,17 @@ extern "C" {
   #if (defined __SES_ARM) || (defined __CROSSWORKS_ARM) || (defined __SEGGER_CC__) || (defined __GNUC__) || (defined __clang__)
     #if (defined __ARM_ARCH_6M__) || (defined __ARM_ARCH_8M_BASE__)
       #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM0
-    #elif (defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__))
+    #elif (defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_8_1M_MAIN__))
       #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM3
     #endif
   #elif defined(__ICCARM__)
     #if (defined (__ARM6M__)          && (__CORE__ == __ARM6M__))          \
      || (defined (__ARM8M_BASELINE__) && (__CORE__ == __ARM8M_BASELINE__))
       #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM0
-    #elif (defined (__ARM7EM__)         && (__CORE__ == __ARM7EM__))         \
-       || (defined (__ARM7M__)          && (__CORE__ == __ARM7M__))          \
-       || (defined (__ARM8M_MAINLINE__) && (__CORE__ == __ARM8M_MAINLINE__)) \
-       || (defined (__ARM8M_MAINLINE__) && (__CORE__ == __ARM8M_MAINLINE__))
+    #elif (defined (__ARM7EM__)           && (__CORE__ == __ARM7EM__))         \
+       || (defined (__ARM7M__)            && (__CORE__ == __ARM7M__))          \
+       || (defined (__ARM8M_MAINLINE__)   && (__CORE__ == __ARM8M_MAINLINE__)) \
+       || (defined (__ARM8_1M_MAINLINE__) && (__CORE__ == __ARM8_1M_MAINLINE__))
       #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM3
     #endif
   #elif defined(__CC_ARM)

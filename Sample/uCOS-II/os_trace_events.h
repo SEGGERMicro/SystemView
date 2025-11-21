@@ -41,10 +41,6 @@
 * DAMAGE.                                                            *
 *                                                                    *
 **********************************************************************
-*                                                                    *
-*       SystemView version: 3.60e                                    *
-*                                                                    *
-**********************************************************************
 * ---------------
 *           uC/OS-II is provided in source form for FREE short-term evaluation, for educational use or
 *           for peaceful research.  If you plan or intend to use uC/OS-II in a commercial application/
