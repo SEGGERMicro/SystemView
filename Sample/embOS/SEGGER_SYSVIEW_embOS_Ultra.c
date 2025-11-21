@@ -85,13 +85,19 @@ static void _cbSendTaskInfo(const OS_TASK* pTask) {
   OS_EnterRegion();                // No scheduling to make sure the task list does not change while we are transmitting it
   memset(&Info, 0, sizeof(Info));  // Fill all elements with 0 to allow extending the structure in future version without breaking the code
   Info.TaskID = (U32)pTask;
-  Info.sName = OS_GetTaskName(pTask);
+#if (OS_TRACKNAME != 0)
+#if (OS_VERSION >= 51600)
+  Info.sName = pTask->sName;
+#else
+  Info.sName = pTask->Name;
+#endif
+#endif
   if (Info.sName == NULL) {
     Info.sName = sDefaultTaskName;
   }
   Info.Prio = pTask->Priority;
 #if (OS_CHECKSTACK != 0)
-  Info.StackBase = (U32)OS_GetStackBase(pTask);
+  Info.StackBase = (U32)pTask->pStackBase;
   Info.StackSize = pTask->StackSize;
 #endif
   SEGGER_SYSVIEW_SendTaskInfo(&Info);
