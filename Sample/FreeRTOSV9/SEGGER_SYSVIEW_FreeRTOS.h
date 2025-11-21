@@ -66,7 +66,8 @@ Notes:
   #define portSTACK_GROWTH              ( -1 )
 #endif
 
-#define SYSVIEW_FREERTOS_MAX_NOF_TASKS  8
+#define SYSVIEW_FREERTOS_MAX_NOF_TASKS      8
+#define SYSVIEW_PORT_PROVIDES_CONTEXT_CHECK 0
 
 /*********************************************************************
 *
