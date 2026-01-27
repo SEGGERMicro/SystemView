@@ -234,6 +234,17 @@ Notes:
 #define traceSTREAM_BUFFER_RECEIVE_FAILED( xStreamBuffer )                      SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XSTREAMBUFFERRECEIVE, (U32)xStreamBuffer, 0u)
 #define traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength )   SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XSTREAMBUFFERRECEIVEFROMISR, (U32)xStreamBuffer, (U32)xReceivedLength)
 
+// macros for Event Groups
+#define traceEVENT_GROUP_CREATE( xEventGroup )                                  SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_XEVENTGROUPCREATE, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup))
+#define traceEVENT_GROUP_DELETE( xEventGroup )                                  SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VEVENTGROUPDELETE, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup))
+#define traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet )                   SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XEVENTGROUPSETBITS, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToSet)
+#define traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear )               SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XEVENTGROUPCLEARBITS, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToClear)
+#define traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor ) SEGGER_SYSVIEW_RecordU32x3(apiID_OFFSET + apiID_XEVENTGROUPSYNC, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToSet, uxBitsToWaitFor)
+#define traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred ) SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XEVENTGROUPSYNC, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred)
+#define traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor )        SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XEVENTGROUPWAITBITS, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToWaitFor)
+#define traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred ) SEGGER_SYSVIEW_RecordU32x3(apiID_OFFSET + apiID_XEVENTGROUPWAITBITS, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToWaitFor, xTimeoutOccurred)
+#define traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear )      SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XEVENTGROUPCLEARBITSFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToClear)
+#define traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet )          SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XEVENTGROUPSETBITSFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)xEventGroup), uxBitsToSet)
 
 #define traceTASK_DELETE( pxTCB )                   {                                                                                                   \
                                                       SEGGER_SYSVIEW_RecordU32(apiID_OFFSET + apiID_VTASKDELETE, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB));  \
