@@ -705,7 +705,7 @@ Notes:
   #define traceRETURN_vTaskPreemptionDisable()                             SEGGER_SYSVIEW_RecordEndCall   (apiID_VTASKPREEMPTIONDISABLE)
   #define traceRETURN_vTaskPreemptionEnable()                              SEGGER_SYSVIEW_RecordEndCall   (apiID_VTASKPREEMPTIONENABLE)
   #define traceRETURN_vTaskYieldWithinAPI()                                SEGGER_SYSVIEW_RecordEndCall   (apiID_VTASKYIELDWITHINAPI)
-  #define traceRETURN_vTaskEnterCriticalFromISR(uxSavedInterruptStatus)    SEGGER_SYSVIEW_RecordEndCallU32(apiID_VTASKYIELDWITHINAPI. (U32)uxSavedInterruptStatus)
+  #define traceRETURN_vTaskEnterCriticalFromISR(uxSavedInterruptStatus)    SEGGER_SYSVIEW_RecordEndCallU32(apiID_VTASKYIELDWITHINAPI, (U32)uxSavedInterruptStatus)
   #define traceRETURN_vTaskExitCriticalFromISR()                           SEGGER_SYSVIEW_RecordEndCall   (apiID_VTASKEXITCRITICALFROMISR)
   #define traceRETURN_ulTaskGetRunTimeCounter(ulRunTimeCounter)            SEGGER_SYSVIEW_RecordEndCallU32(apiID_ULTASKGETIDLERUNTIMECOUNTER, (U32)ulRunTimeCounter)
 
