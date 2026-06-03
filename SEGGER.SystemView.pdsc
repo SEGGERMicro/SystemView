@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.56" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.56/schema/PACK.xsd">
+  <vendor>SEGGER</vendor>
+  <name>SystemView</name>
+  <description overview="README.md">SEGGER SystemView Real Time Visualization</description>
+  <url>https://github.com/SEGGERMicro/SystemView/raw/main/</url>
+  <repository type="git">https://github.com/SEGGERMicro/SystemView.git</repository>
+  <license>LICENSE.md</license>
+
+  <releases>
+    <release version="4.12.0" tag="V4.12.0" date="2026-06-03" url="https://github.com/SEGGERMicro/SystemView/releases/download/V4.12.0/SEGGER.SystemView.4.12.0.pack">
+      Pack based on SystemView Target Source 4.12.0.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>SEGGER</keyword>
+    <keyword>SystemView</keyword>
+    <keyword>Real Time Visualization</keyword>
+  </keywords>
+
+  <conditions>
+    <condition id="Cortex-M0">
+      <description>Cortex-M0/M0+/M23 compatible device</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="Cortex-M1"/>
+      <accept Dcore="Cortex-M23"/>
+      <accept Dcore="SC000"/>
+      <accept Dcore="ARMV8MBL"/>
+    </condition>
+    <condition id="Cortex-M">
+      <description>Cortex-M (without M0/M0+/M23) compatible device</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="Cortex-M4"/>
+      <accept Dcore="Cortex-M7"/>
+      <accept Dcore="Cortex-M33"/>
+      <accept Dcore="Cortex-M35P"/>
+      <accept Dcore="Cortex-M52"/>
+      <accept Dcore="Cortex-M55"/>
+      <accept Dcore="Cortex-M85"/>
+      <accept Dcore="Star-MC1"/>
+      <accept Dcore="SC300"/>
+      <accept Dcore="ARMV8MML"/>
+      <accept Dcore="ARMV81MML"/>
+    </condition>
+    <condition id="RTT">
+      <description>Real Time Transfer (RTT)</description>
+      <require Cclass="SEGGER" Cgroup="RTT"/>
+    </condition>
+    <condition id="RTT FreeRTOS">
+      <description>RTT with FreeRTOS</description>
+      <require Cclass="SEGGER" Cgroup="RTT"/>
+      <require Cclass="RTOS" Cbundle="FreeRTOS" Cgroup="Core" Cversion="11.0.0"/>
+    </condition>
+  </conditions>
+
+  <components>
+    <component Cclass="SEGGER" Cgroup="SystemView" Cversion="4.12.0" Cvariant="NoOS" isDefaultVariant="true" condition="RTT">
+      <description>SEGGER SystemView (No OS)</description>
+      <RTE_Components_h>
+        #define RTE_SEGGER_SYSTEMVIEW
+        #define RTE_SEGGER_SYSTEMVIEW_NOOS
+      </RTE_Components_h>
+      <files>
+        <file category="doc"     name="https://kb.segger.com/SystemView"/>
+        <file category="header"  name="SEGGER/SEGGER.h"/>
+        <file category="header"  name="SEGGER/Global.h"/>
+        <file category="header"  name="Config/SEGGER_SYSVIEW_Conf.h" attr="config" version="4.12.0"/>
+        <file category="header"  name="SYSVIEW/SEGGER_SYSVIEW.h"/>
+        <file category="sourceC" name="SYSVIEW/SEGGER_SYSVIEW.c"/>
+        <file category="sourceC" name="Sample/NoOS/Config/Cortex-M/SEGGER_SYSVIEW_Config_NoOS.c"      attr="config" version="4.12.0" condition="Cortex-M"/>
+        <file category="sourceC" name="Sample/NoOS/Config/Cortex-M0/SEGGER_SYSVIEW_Config_NoOS_CM0.c" attr="config" version="4.12.0" condition="Cortex-M0"/>
+      </files>
+    </component>
+    <component Cclass="SEGGER" Cgroup="SystemView" Cversion="4.12.0" Cvariant="FreeRTOS" condition="RTT FreeRTOS">
+      <description>SEGGER's SystemView (FreeRTOS)</description>
+      <RTE_Components_h>
+        #define RTE_SEGGER_SYSTEMVIEW
+        #define RTE_SEGGER_SYSTEMVIEW_FREERTOS
+      </RTE_Components_h>
+      <files>
+        <file category="doc"     name="https://kb.segger.com/SystemView"/>
+        <file category="header"  name="SEGGER/SEGGER.h"/>
+        <file category="header"  name="SEGGER/Global.h"/>
+        <file category="header"  name="Config/SEGGER_SYSVIEW_Conf.h" attr="config" version="4.12.0"/>
+        <file category="header"  name="SYSVIEW/SEGGER_SYSVIEW.h"/>
+        <file category="sourceC" name="SYSVIEW/SEGGER_SYSVIEW.c"/>
+        <file category="sourceC" name="Sample/FreeRTOSV11/Config/Cortex-M/SEGGER_SYSVIEW_Config_FreeRTOS.c" attr="config" version="4.12.0"/>
+        <file category="header"  name="Sample/FreeRTOSV11/SEGGER_SYSVIEW_FreeRTOS.h"/>
+        <file category="sourceC" name="Sample/FreeRTOSV11/SEGGER_SYSVIEW_FreeRTOS.c"/>
+      </files>
+    </component>
+  </components>
+
+</package>

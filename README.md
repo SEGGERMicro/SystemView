@@ -40,3 +40,16 @@ Add `SEGGER` and `SYSVIEW` as include directories.
 
 For more information on target-specific configuration and instrumentation of not-yet-supported RTOSes, refer to
 the [SystemView User Guide](https://doc.segger.com/UM08027_SystemView.html).
+
+### CMSIS-Pack
+
+The CMSIS-Pack enables easy integration of SystemView into CMSIS-based projects.
+
+To use SystemView in a *csolution project* add `pack: SEGGER::SystemView` and one of these components:
+
+* `component: SEGGER:SystemView&NoOS` for bare-metal applications
+* `component: SEGGER:SystemView&FreeRTOS` for FreeRTOS-based applications
+
+Both components require the RTT pack.
+The [RTE directory](https://open-cmsis-pack.github.io/cmsis-toolbox/build-overview/#rte-directory-structure)
+is the project's config directory and contains the local copy of `SEGGER_SYSVIEW_Conf.h` for additional configuration.
