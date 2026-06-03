@@ -75,8 +75,13 @@ Notes:
   #define TRACERETURN_ENABLE            ( 1 )
 #endif
 
-#define SYSVIEW_FREERTOS_MAX_NOF_TASKS      8
-#define SYSVIEW_PORT_PROVIDES_CONTEXT_CHECK 0
+#ifndef SYSVIEW_FREERTOS_MAX_NOF_TASKS
+  #define SYSVIEW_FREERTOS_MAX_NOF_TASKS      ( 8 )
+#endif
+
+#ifndef SYSVIEW_PORT_PROVIDES_CONTEXT_CHECK
+  #define SYSVIEW_PORT_PROVIDES_CONTEXT_CHECK ( 1 )
+#endif
 
 /*********************************************************************
 *
